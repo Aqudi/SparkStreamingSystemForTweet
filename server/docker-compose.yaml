@@ -1,0 +1,62 @@
+version: "3.6"
+volumes:
+  shared-workspace:
+    name: "hadoop-distributed-file-system"
+    driver: local
+  cassandra_volumne:
+    driver: local
+services:
+  # ---------- Cassandra ----------------
+  cassandra:
+    image: bitnami/cassandra:latest
+    container_name: cassandra
+    ports:
+      - 9042:9042
+    volumes:
+      - ./cassandra_data:/bitnami
+    environment:
+      - CASSANDRA_USER=cassandra
+      - CASSANDRA_PASSWORD=cassandra
+      - CASSANDRA_CLUSTER_NAME=Testing
+      - CASSANDRA_PASSWORD_SEEDER=yes
+      - BITNAMI_DEBUG=1
+
+  # ---------- Kafka ----------------
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - 2181:2181
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka
+    ports:
+      - 9092:9092
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  # ---------- Spark ----------------
+  jupyterlab:
+    image: andreper/jupyterlab:3.0.0-spark-3.0.0
+    container_name: jupyterlab
+    ports:
+      - 8888:8888
+      - 8040-8070:4040-4070
+    volumes:
+      - shared-workspace:/opt/workspace
+      - .:/opt/workspace/server
+  spark-master:
+    image: andreper/spark-master:3.0.0
+    container_name: spark-master
+    ports:
+      - 8080:8080
+      - 7077:7077
+    volumes:
+      - shared-workspace:/opt/workspace
