@@ -23,14 +23,14 @@ services:
 
   # ---------- Kafka ----------------
   zookeeper:
-    image: bitnami/zookeeper:latest
+    image: bitnami/zookeeper:3.8
     container_name: zookeeper
     ports:
       - 2181:2181
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
   kafka:
-    image: bitnami/kafka:latest
+    image: bitnami/kafka:3.2
     container_name: kafka
     ports:
       - 9092:9092
