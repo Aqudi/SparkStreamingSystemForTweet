@@ -15,10 +15,10 @@ compose_files = {
     "spark-workers":"docker-compose.spark.worker.yaml",
 }
 
-command_args = ["docker-compose"]
+command_args = ["docker-compose -f docker-compose.yaml"]
 
 if args.action == "down" or args.spark_workers:
-    command_args.append(f'-f {compose_files["spark_workers"]}')
+    command_args.append(f'-f {compose_files["spark-workers"]}')
 if args.action == "down" or args.hadoop:
     command_args.append(f'-f {compose_files["hadoop"]}')
 
