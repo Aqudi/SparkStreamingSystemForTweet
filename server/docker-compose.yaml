@@ -5,6 +5,7 @@ volumes:
     driver: local
   cassandra_volumne:
     driver: local
+
 services:
   # ---------- Cassandra ----------------
   cassandra:
@@ -42,6 +43,7 @@ services:
       - zookeeper
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
   # ---------- Spark ----------------
   jupyterlab:
     image: andreper/jupyterlab:3.0.0-spark-3.0.0
